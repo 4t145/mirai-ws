@@ -9,20 +9,20 @@ fn connect_test() {
             "127.0.0.1:8001", 
             MiraiStreamConfig {
                 verify_key:"no-key",
-                qq: "2879606187"
+                qq: "123456789"
             }
         ).await.unwrap();
         let (mut tx, mut rx) = stream.split();
 
         let msg_chain = vec![
             text!("hello {}", "world"),
-            img!(url:"https://i1.hdslb.com/bfs/face/9a0b05e498c2a2eabb336267179c0e3b865ece6d.jpg@150w_150h.jpg")
+            img!(url:"https://some.web/img.jpg")
         ];
 
         let _res = tx.send(
             MiraiReply::new_friend_reply(
                 msg_chain, 
-                2129310193, 
+                987654321, 
                 0
             )
         ).await; 
