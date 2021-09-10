@@ -5,7 +5,7 @@ edition = "2018"
 repository = "https://github.com/4t145/mirai-ws"
 description = "mirai-http-api rust interface, based on tungstenite. "
 license = "MIT"
-license-file = "LISENCE"
+license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
