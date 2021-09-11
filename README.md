@@ -1,6 +1,11 @@
 # 使用
 
 ```rust
+use crate::conn::{MiraiStream, MiraiStreamConfig};
+use crate::protocol::{message::MsgUnit, MiraiReply};
+use futures::{StreamExt, SinkExt};
+use crate::{text, img};
+
 let stream = MiraiStream::connect(
     "127.0.0.1:8001", 
     MiraiStreamConfig {
@@ -8,7 +13,6 @@ let stream = MiraiStream::connect(
         qq: "123456789"
     }
 ).await.unwrap();
-
 let (mut tx, mut rx) = stream.split();
 
 let msg_chain = vec![
@@ -16,9 +20,10 @@ let msg_chain = vec![
     img!(url:"https://some.web/img.jpg")
 ];
 
-let _res = tx.send(
-    MiraiReply::new_friend_reply(msg_chain, 987654321, 0)
-).await;
+tx.send( 
+    MiraiReply::new_friend_reply(msg_chain, 987654321).pack() 
+).await.unwrap();
 
-let response = rx.next().await;
+let resp = rx.next().await;
+println!("get response {:?}", resp);
 ```

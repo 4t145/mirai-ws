@@ -34,8 +34,7 @@ impl From<IoError> for MiraiError{
     }
 }
 
-use crate::protocol::recieve::SyncMsg;
-use crate::protocol::MiraiReply;
+use crate::protocol::{MiraiRxPack, MiraiTxPack};
 
 pub struct MiraiStream {
     pub ws: WsStream,
@@ -63,7 +62,7 @@ impl MiraiStream {
 
 impl Stream for MiraiStream {
     
-    type Item = SyncMsg;
+    type Item = MiraiRxPack;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let poll = self.ws.poll_next_unpin(cx);
@@ -78,9 +77,9 @@ impl Stream for MiraiStream {
                             Ok(ws_msg) => {
                                 match ws_msg {
                                     WsMsg::Text(text) => {
-                                        let _msg: Result<SyncMsg, SerdeError> = serde_json::from_str(text.as_str());
+                                        let _msg: Result<MiraiRxPack, SerdeError> = serde_json::from_str(text.as_str());
                                         // can't deserde msg
-                                        _msg.unwrap_or(SyncMsg::bad())
+                                        _msg.unwrap_or(MiraiRxPack::unparseable())
                                     },
                                     WsMsg::Binary(_) => todo!(),
                                     WsMsg::Ping(_) => todo!(),
@@ -89,7 +88,7 @@ impl Stream for MiraiStream {
                                 }
                             }
                             // bad inbound ws, just drop it
-                            Err(_) => SyncMsg::bad()
+                            Err(_) => MiraiRxPack::invalid_ws()
                         }
                     })
                 }
@@ -99,15 +98,15 @@ impl Stream for MiraiStream {
 }
 
 
-impl Sink<MiraiReply> for MiraiStream {
+impl Sink<MiraiTxPack> for MiraiStream {
     type Error = MiraiError;
 
     fn poll_ready(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.ws.poll_ready_unpin(cx).map_err(Self::Error::from)
     }
 
-    fn start_send(mut self: Pin<&mut Self>, item: MiraiReply) -> Result<(), Self::Error> {
-        let ws_msg = WsMsg::Text(item.json());
+    fn start_send(mut self: Pin<&mut Self>, item: MiraiTxPack) -> Result<(), Self::Error> {
+        let ws_msg = WsMsg::Text(serde_json::to_string(&item).unwrap());
         println!("{}",&ws_msg);
         self.ws.start_send_unpin(ws_msg).map_err(Self::Error::from)
     }

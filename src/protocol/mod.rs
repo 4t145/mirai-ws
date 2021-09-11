@@ -21,6 +21,20 @@ pub struct MiraiRxPack {
     pub sync_id: i32,
     pub data: MiraiRecieve
 }
+impl MiraiRxPack {
+    pub(crate) fn unparseable() -> Self {
+        Self {
+            sync_id: i32::MIN,
+            data: MiraiRecieve::Unparseable
+        }
+    }
+    pub(crate) fn invalid_ws() -> Self {
+        Self {
+            sync_id: i32::MIN,
+            data: MiraiRecieve::InvalidWs
+        }
+    }
+}
 
 #[derive(Serialize, Debug)]
 pub enum MiraiReply {
@@ -28,12 +42,6 @@ pub enum MiraiReply {
 }
 
 impl MiraiReply {
-    pub fn json(&self) -> String {
-        match self {
-            MiraiReply::Msg(msg_reply) => serde_json::json!(msg_reply).to_string(),
-        }
-    }
-
     pub fn new_group_reply(msg_chain: Vec<MsgUnit>, group_id: i64) -> Self {
         Self::Msg(reply::MsgReply {
             command: reply::MsgCmd::SendGroupMessage {
@@ -53,6 +61,13 @@ impl MiraiReply {
             }
         })
     }
+
+    pub fn pack(self) -> MiraiTxPack {
+        MiraiTxPack {
+            sync_id: -1,
+            payload: self
+        }
+    }
 }
 
 #[derive(Deserialize, Debug)]
@@ -66,8 +81,6 @@ pub enum MiraiRecieve {
         payload: RespPayLoad
     },
     Msg(Msg),
+    Unparseable,
+    InvalidWs
 }
-
-
-
-
