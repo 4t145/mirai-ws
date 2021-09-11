@@ -1,0 +1,31 @@
+{
+    "syncId": -1,
+    "data": {
+        "type": "GroupMessage",
+        "messageChain": [
+            {
+                "type": "Source",
+                "id": 159357,
+                "time": 1630861894
+            },
+            {
+                "type": "Plain",
+                "text": "聊胜于无"
+            }
+        ],
+        "sender": {
+            "id": 1234568789,
+            "memberName": "ncnl",
+            "specialTitle": "",
+            "permission": "ADMINISTRATOR",
+            "joinTimestamp": 1601379262,
+            "lastSpeakTimestamp": 1630861894,
+            "muteTimeRemaining": 0,
+            "group": {
+                "id": 476264004,
+                "name": "SomeGroupName",
+                "permission": "MEMBER"
+            }
+        }
+    }
+}

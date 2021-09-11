@@ -1,0 +1,29 @@
+{
+    "type": "Forward",
+    "nodeList": [
+        {
+            "senderId": 2129310193,
+            "time": 1630849084,
+            "senderName": "kilo",
+            "messageChain": [
+                {
+                    "type": "Plain",
+                    "text": "hi"
+                }
+            ],
+            "messageId": null
+        },
+        {
+            "senderId": 2129310193,
+            "time": 1630849561,
+            "senderName": "kilo",
+            "messageChain": [
+                {
+                    "type": "Plain",
+                    "text": "hi"
+                }
+            ],
+            "messageId": null
+        }
+    ]
+}

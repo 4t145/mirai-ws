@@ -5,7 +5,6 @@ use crate::protocol::message::MsgUnit;
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct MsgReply {
-    pub sync_id: i32,
     #[serde(flatten)]
     pub command: MsgCmd
 }
