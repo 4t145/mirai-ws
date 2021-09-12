@@ -1,6 +1,6 @@
 [package]
 name = "mirai-ws"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2018"
 repository = "https://github.com/4t145/mirai-ws"
 description = "mirai-http-api rust interface, based on tungstenite. "
