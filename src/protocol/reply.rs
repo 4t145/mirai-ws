@@ -1,5 +1,5 @@
 use serde::{Serialize};
-use crate::protocol::message::MsgUnit;
+use crate::protocol::common::MsgUnit;
 
 
 #[derive(Serialize, Debug)]

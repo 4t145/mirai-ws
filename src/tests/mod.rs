@@ -3,7 +3,7 @@ mod deserde;
 #[test]
 fn connect_test() {
     use crate::conn::{MiraiStream, MiraiStreamConfig};
-    use crate::protocol::{message::MsgUnit, MiraiReply};
+    use crate::protocol::{common::MsgUnit, MiraiReply};
     use futures::{StreamExt, SinkExt};
     use crate::{text, img};
     let send = async {

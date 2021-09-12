@@ -1,55 +1,42 @@
+//! # common data structure
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//! 
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+
+
 use serde::{Serialize, Deserialize};
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase", tag="type")]
-pub enum Msg {
-    #[serde(rename_all = "camelCase")]
-    FriendMessage {
-        sender: PersonalSender,
-        message_chain: Vec<MsgUnit>
-    },
-    #[serde(rename_all = "camelCase")]
-    GroupMessage {
-        sender: GroupSender,
-        message_chain: Vec<MsgUnit>
-    },
-    #[serde(rename_all = "camelCase")]
-    TempMessage {
-        sender: GroupSender,
-        message_chain: Vec<MsgUnit>
-    },
-    #[serde(rename_all = "camelCase")]
-    StrangerMessage {
-        sender: PersonalSender,
-        message_chain: Vec<MsgUnit>
-    },
-    #[serde(rename_all = "camelCase")]
-    OtherClientMessage {
-        sender: OtherClientSender,
-        message_chain: Vec<MsgUnit>
-    },
-    #[serde(rename_all = "camelCase")]
-    BadMessage,
-}
-
-impl Msg {
-    pub fn get_sender_qq(&self) -> i64 {
-        match self {
-            Msg::FriendMessage { sender, message_chain:_ } => sender.id,
-            Msg::GroupMessage { sender, message_chain:_ } => sender.id,
-            Msg::TempMessage { sender, message_chain:_ } => sender.id,
-            Msg::StrangerMessage { sender, message_chain:_ } => sender.id,
-            Msg::OtherClientMessage { sender, message_chain:_ } => sender.id,
-            _ => 0,
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PersonalSender {
-    id: i64,
-    nickname: String,
-    remark: String,
+    pub id: i64,
+    pub nickname: String,
+    pub remark: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -62,22 +49,22 @@ pub enum GroupPermisson {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GroupInfo {
-    id: i64,
-    name: String,
-    permission: GroupPermisson
+    pub id: i64,
+    pub name: String,
+    pub permission: GroupPermisson
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct GroupSender {
-    id: i64,
-    member_name: String,
-    special_title: String,
-    permission: GroupPermisson,
-    join_timestamp: i64,
-    last_speak_timestamp: i64,
-    mute_time_remaining: i64,
-    group: GroupInfo
+    pub id: i64,
+    pub member_name: String,
+    pub special_title: String,
+    pub permission: GroupPermisson,
+    pub join_timestamp: i64,
+    pub last_speak_timestamp: i64,
+    pub mute_time_remaining: i64,
+    pub group: GroupInfo
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -97,9 +84,9 @@ impl Default for ClientDevice {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct OtherClientSender {
-    id: i64,
+    pub id: i64,
     #[serde(default)]
-    platform: ClientDevice
+    pub platform: ClientDevice
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -188,6 +175,15 @@ pub struct MsgNode {
     message_id: Option<usize>
 }
 
+/// # Usage
+/// 
+/// use this macro to create a plain text `MsgUnit`
+/// ```rust
+/// let msg_chain = vec![
+///     text!("hello"),
+///     text!("just simply using the macro {}!()", "text")
+/// ];
+/// ```
 #[macro_export]
 macro_rules! text {
     ($s:expr) => {
@@ -198,6 +194,19 @@ macro_rules! text {
     }}
 }
 
+/// # Usage
+/// 
+/// use this macro to create a image `MsgUnit`
+/// ```rust
+/// let msg_chain = vec![
+///     // in default case, this macro create image by url
+///     img!("https://some.web.com/img.jpg"),
+///     // you can specify whether url 
+///     img!(url = "https://some.web.com/img.jpg"),
+///     // or image-id you are going to use
+///     img!(id = "abcdefg-hijk")
+/// ];
+/// ```
 #[macro_export]
 macro_rules! img {
     (url:$url:expr) => {
@@ -211,6 +220,17 @@ macro_rules! img {
     };
 }
 
+/// # Usage
+/// 
+/// use this macro to create a image `At`
+/// ```rust
+/// let msg_chain = vec![
+///     // at some body
+///     at!(123456789),
+///     // at all
+///     at!(/all),
+/// ];
+/// ```
 #[macro_export]
 macro_rules! at {
     ($target:expr) => {

@@ -1,11 +1,12 @@
 pub mod reply;
-pub mod message;
 pub mod recieve;
-pub mod response;
+pub mod common;
+
 use serde::{Serialize, Deserialize};
-use message::MsgUnit;
-use message::Msg;
-use response::{Status, RespPayLoad};
+use common::MsgUnit;
+use recieve::{Msg, Status, RespPayLoad};
+
+use self::recieve::Evt;
 
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -81,6 +82,7 @@ pub enum MiraiRecieve {
         payload: RespPayLoad
     },
     Msg(Msg),
+    Evt(Evt),
     Unparseable,
     InvalidWs
 }
